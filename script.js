@@ -6,6 +6,7 @@ const chatWindow = document.getElementById("chatWindow");
 const userInput = document.getElementById("userInput");
 const sendButton = document.getElementById("sendBtn");
 const selectedProductsList = document.getElementById("selectedProductsList");
+const clearSelectionsButton = document.getElementById("clearSelectionsBtn");
 const generateRoutineButton = document.getElementById("generateRoutine");
 const productModal = document.getElementById("productModal");
 const modalTitle = document.getElementById("modalTitle");
@@ -14,10 +15,11 @@ const closeModalBtn = document.getElementById("closeModalBtn");
 
 // Cloudflare worker URL
 const workerUrl = "https://wanderbot-worker.jdurazo636.workers.dev/";
+const storageKey = "loreal-selected-products";
 
 let allProducts = [];
 let currentProducts = [];
-let selectedProductIds = [];
+let selectedProductIds = loadSelectedProductIds();
 let isWaitingForReply = false;
 
 // Keep the full chat history so follow-up questions can stay relevant.
@@ -41,6 +43,31 @@ selectedProductsList.innerHTML = `
 `;
 
 renderChatMessages();
+
+function loadSelectedProductIds() {
+  try {
+    const savedProducts = localStorage.getItem(storageKey);
+
+    if (!savedProducts) {
+      return [];
+    }
+
+    const parsedProducts = JSON.parse(savedProducts);
+    return Array.isArray(parsedProducts) ? parsedProducts : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveSelectedProductIds() {
+  localStorage.setItem(storageKey, JSON.stringify(selectedProductIds));
+}
+
+function updateSelectionControls() {
+  if (clearSelectionsButton) {
+    clearSelectionsButton.disabled = selectedProductIds.length === 0;
+  }
+}
 
 /* Load product data from JSON file */
 async function loadProducts() {
@@ -193,6 +220,7 @@ function displayProducts(products) {
 function renderSelectedProducts() {
   if (selectedProductIds.length === 0) {
     selectedProductsList.innerHTML = `<p class="empty-state">No products selected yet.</p>`;
+    updateSelectionControls();
     return;
   }
 
@@ -212,6 +240,8 @@ function renderSelectedProducts() {
       `,
     )
     .join("");
+
+  updateSelectionControls();
 }
 
 function toggleProductSelection(productId) {
@@ -221,8 +251,19 @@ function toggleProductSelection(productId) {
     selectedProductIds.push(productId);
   }
 
+  saveSelectedProductIds();
   displayProducts(currentProducts);
   renderSelectedProducts();
+}
+
+function clearAllSelections() {
+  selectedProductIds = [];
+  saveSelectedProductIds();
+  renderSelectedProducts();
+
+  if (currentProducts.length > 0) {
+    displayProducts(currentProducts);
+  }
 }
 
 function openProductModal(productId) {
@@ -315,6 +356,8 @@ selectedProductsList.addEventListener("click", (e) => {
   toggleProductSelection(productId);
 });
 
+clearSelectionsButton.addEventListener("click", clearAllSelections);
+
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -360,3 +403,10 @@ generateRoutineButton.addEventListener("click", async () => {
 
   await sendMessageToWorker(routinePrompt, false);
 });
+
+async function initializeApp() {
+  await loadProducts();
+  renderSelectedProducts();
+}
+
+initializeApp();

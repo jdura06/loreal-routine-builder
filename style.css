@@ -381,6 +381,29 @@ body {
   gap: 10px;
 }
 
+.selection-actions {
+  margin-top: 14px;
+}
+
+.clear-btn {
+  padding: 10px 14px;
+  border: 1px solid #000;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.clear-btn:hover {
+  background: #f5f1e8;
+}
+
+.clear-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .selected-product-pill {
   display: flex;
   align-items: center;
