@@ -158,6 +158,7 @@ async function sendMessageToWorker(content, shouldShowInChat = true) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "gpt-4.1",
+        max_tokens: 500,
         messages: conversationMessages,
       }),
     });
