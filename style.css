@@ -79,6 +79,48 @@ body {
   overflow-y: auto;
   background: #fafafa;
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-message {
+  max-width: 85%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  align-self: flex-start;
+}
+
+.chat-message strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #666;
+}
+
+.chat-message p {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.chat-message.user strong {
+  color: #f5f1e8;
+}
+
+.chat-message.assistant {
+  background: #f5f1e8;
+  border-color: #d7c7a4;
 }
 
 /* placeholder message */
@@ -111,6 +153,10 @@ body {
   border-bottom-color: #000;
 }
 
+.chat-form input:disabled {
+  opacity: 0.7;
+}
+
 .chat-form button {
   font-size: 18px;
   background: #000;
@@ -133,6 +179,11 @@ body {
 .chat-form button:focus {
   outline: 2px solid #000;
   outline-offset: 2px;
+}
+
+.chat-form button:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 
 /* visually hidden */
@@ -180,12 +231,33 @@ body {
 
 .product-card {
   flex: 0 1 calc(33.333% - 14px);
+  position: relative;
   border: 1px solid #ccc;
   padding: 15px;
   border-radius: 4px;
   display: flex;
   gap: 15px;
   min-height: 160px;
+  cursor: pointer;
+  background: #fff;
+  text-align: left;
+  transition:
+    border-color 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.product-card:hover,
+.product-card:focus-visible {
+  border-color: #000;
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.product-card.is-selected {
+  border: 2px solid #000;
+  background: #f8f2e8;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
 }
 
 .product-card img {
@@ -211,6 +283,130 @@ body {
 .product-card p {
   font-size: 14px;
   color: #666;
+}
+
+.selection-badge {
+  display: inline-block;
+  width: fit-content;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eee;
+  color: #555;
+  font-size: 12px;
+}
+
+.product-card.is-selected .selection-badge {
+  background: #000;
+  color: #fff;
+}
+
+.details-btn {
+  margin-top: 10px;
+  width: fit-content;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.details-btn:hover {
+  background: #666;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  position: relative;
+  width: min(100%, 520px);
+  padding: 28px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h3 {
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+.modal-content p {
+  line-height: 1.6;
+  color: #444;
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.close-modal-btn:hover {
+  background: #666;
+}
+
+.empty-state {
+  color: #666;
+  font-size: 15px;
+}
+
+#selectedProductsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.selected-product-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fafafa;
+}
+
+.remove-product-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.remove-product-btn:hover {
+  background: #666;
 }
 
 /* selected products */
